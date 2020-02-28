@@ -14,7 +14,7 @@
 // "Physical" parts
 char MEM[MEMORY_SIZE];
 char ACC; // use low 4 bits only
-char PC; // should only go f
+char PC; // should only go to f in hex
 char IR; // high 4 bits is instruction, low 4 bits is value
 
 // Logical parts
@@ -57,11 +57,11 @@ void load_program_to_memory()
     MEM[8]  = 0b01000010; // STO 2
     MEM[9]  = 0b01110000; // HLT
     MEM[10] = 0b00000000;
-    MEM[11] = 0b11111111;
-    MEM[12] = 0b00000000;
-    MEM[13] = 0b10011010;
-    MEM[14] = 0b10011010;
-    MEM[15] = 0b11011011;
+    MEM[11] = 0b11111111; // -
+    MEM[12] = 0b00000000; //
+    MEM[13] = 0b10011010; // L
+    MEM[14] = 0b10011010; // O
+    MEM[15] = 0b11011011; // L
 }
 
 void fetch_decode_execute()
@@ -336,7 +336,7 @@ int main(int argc, char** argv)
                 EXIT = true;
             }
         }
-        
+
         fetch_decode_execute();
 
         draw_everything(renderer);
