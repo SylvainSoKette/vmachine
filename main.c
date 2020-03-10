@@ -12,13 +12,13 @@
 ///////////////////////////////////////////////////////////
 
 // "Physical" parts
-char MEM[MEMORY_SIZE];
-char ACC; // use low 4 bits only
-char PC; // should only go to f in hex
-char IR; // high 4 bits is instruction, low 4 bits is value
+static char MEM[MEMORY_SIZE];
+static char ACC; // use low 4 bits only
+static char PC; // should only go to f in hex
+static char IR; // high 4 bits is instruction, low 4 bits is value
 
 // Logical parts
-int EXIT = 0;
+static int EXIT = 0;
 
 void init_computer()
 {
