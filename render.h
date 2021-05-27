@@ -42,16 +42,26 @@ void init_sdl_window_renderer(SDL_Window **window, SDL_Renderer **renderer)
     *renderer = SDL_CreateRenderer(*window, -1, SDL_RENDERER_SOFTWARE);
 }
 
-void draw_rect(SDL_Renderer* r, int x, int y, int w, int h, Color c)
+inline void draw_rect(SDL_Renderer* r, int x, int y, int w, int h, Color c)
 {
-    SDL_SetRenderDrawColor(r, c.r, c.g, c.b, c.a);
-    for (int dy = y; dy < y + h; dy++)
+	const SDL_Rect rect = {
+		.x = x,
+		.y = y,
+		.w = w,
+		.h = h
+	};
+
+    SDL_SetRenderDrawColor(r, c.r, c.g, c.b, c.a);	
+	SDL_RenderFillRect(r, &rect);
+	/*
+	for (int dy = y; dy < y + h; dy++)
     {
         for (int dx = x; dx < x + w; dx++)
         {
             SDL_RenderDrawPoint(r, dx, dy);
         }
     }
+	*/
 }
 
 #endif // __render_h
