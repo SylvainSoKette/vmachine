@@ -2,10 +2,17 @@
 
 A virtual machine designed to learn about cpu architecture.
 
+## Why ?
+
+I made this virtual machine to confirm that I understood how computer and cpu worked.
+As a side effect, I guess it can also be used to learn about cpu architectures, machine code, assembly and compilers !
+
+This is the very first version, a proof of concept. I plan to 
+
 ## Architecture
 
 - 16 bytes memory
-- 8 bits instruction register, but in reality 4 bits IR and 4 bit MOD.
+- "8 bits" architecture : 8 bits instruction register, but in reality 4 bits IR and 4 bit MOD.
 - 4 bits accumulator
 - 4 bits program counter
 
@@ -31,9 +38,16 @@ A virtual machine designed to learn about cpu architecture.
 - SDL2
 - make
 
-## TODO
+## TODO and Ideas
 
 - [x] add comparator instruction
 - [x] visual representation with SDL
 - [ ] load "binary" from file to program memory
-- [ ] extend to 16 bits : 4 bits op code, 12 bits modifier (4096 bytes of addressable memory)
+- [ ] better delay management: delay all the time and full-speed when key pressed ? Different speed settings ? Programmable frequency ?
+- [ ] extend to 16 bits instructions : 4 bits op code, 12 bits modifier (4096 bytes of addressable memory) ?
+- [ ] python assembler to translate assembly to "machine code" that can be read by the virtual machine.
+- [ ] multiple memory banks ?
+- [ ] framebuffer and display ?
+- [ ] IOs ? At least keyboard ?
+- [ ] Stack architecture ?
+

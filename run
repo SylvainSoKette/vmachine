@@ -1,4 +1,4 @@
 #!/usr/bin/env sh
 
-make && bin/vmachine
+make && bin/vmachine test.vbin
 
