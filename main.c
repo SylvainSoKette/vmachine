@@ -13,8 +13,8 @@
 #define DEBUG       0
 // Delay between each clock cycle in ms.
 // A complete clock cycle has 3 steps.
-// A delay of 100ms means the clock operate at 10hz
-#define DELAY       0
+// A delay of 100ms means the clock operate at 10Hz
+#define DELAY       100
 // Clearly show the computer is working with 4 bits
 // We need to add 1 because we count from 1 not 0.
 #define MEMORY_SIZE 0b1111 + 1
@@ -65,7 +65,10 @@ void load_program_to_memory(const char* program_filepath)
 
 	if (!file)
 	{
-		printf("Could not read file: %s\n", program_filepath);
+		if (program_filepath)
+			printf("Could not read file: %s\n", program_filepath);
+		else
+			printf("No filepath to a binary given\n");
 		printf("Loading default test program...\n");
 
 		MEM[0]  = 0b00001111; // NOP 15
