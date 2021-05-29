@@ -329,6 +329,7 @@ void wait_for_input_loop()
 
     while (true)
     {
+		SDL_Delay(1);
         while (SDL_PollEvent(&event))
         {
             if (event.type == SDL_KEYDOWN)
