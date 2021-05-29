@@ -16,7 +16,8 @@
 // A delay of 100ms means the clock operate at 10hz
 #define DELAY       0
 // Clearly show the computer is working with 4 bits
-#define MEMORY_SIZE 0b10000
+// We need to add 1 because we count from 1 not 0.
+#define MEMORY_SIZE 0b1111 + 1
 
 ///////////////////////////////////////////////////////////
 // VIRTUAL COMPUTER CODE //////////////////////////////////
