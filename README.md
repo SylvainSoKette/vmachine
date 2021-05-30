@@ -18,7 +18,7 @@ This is the very first version, a proof of concept. I plan to
 
 ## Instruction set
 
-- NOP : ```0000 ----```` no op, used to store value
+- NOP : ```0000 ----``` no op, used to store value
 - LDA : ```0001 ADDR``` load value at addr into accumulator
 - ADD : ```0010 ADDR``` add value at addr to accumulator
 - SUB : ```0011 ADDR``` subst value at addr to accumulator
