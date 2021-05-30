@@ -1,6 +1,8 @@
-# Vmachine
+# VMachine
 
 A virtual machine designed to learn about cpu architecture.
+
+![Image showing the program in action](./img/vmachine.png "VMachine running !")
 
 ## Why ?
 
