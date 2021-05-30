@@ -32,7 +32,7 @@ This is a proof of concept, I plan to to iterate over the design and make it act
 
 ## How to
 
-- Pass a path to a file containing a "vbinary" as the first argument of the program. It must contain at most 128 '0' and '1' **characters** that will be loaded into the virtual computer's memory. An example vbin file is provided in this repo. If no file is provided, the machine will load the default test program. The the file provided is incorrect, as error message will be shown and the program will stop
+- Pass a path to a file containing a "vbinary" as the first argument of the program. It must contain at most 128 '0' and '1' **characters** that will be loaded into the virtual computer's memory. An example vbin file is provided in this repo. If no file is provided, the machine will load the default test program. If the file provided is incorrect, as error message will be shown and the program will stop.
 - ```ESCAPE``` at any time during the execution will stop the virtual machine at the current step.
 - When stopped, any key will quit the program.
 
