@@ -6,10 +6,10 @@ A virtual machine designed to learn about cpu architecture.
 
 ## Why ?
 
-I made this virtual machine to confirm that I understood how computer and cpu worked.
-As a side effect, I guess it can also be used to learn about cpu architectures, machine code, assembly and compilers !
+I'm a huge fan of [Ben Eater](https://www.youtube.com/c/BenEater/) and binged watched all of his videos on building a computer from scratch.
+Since I lack a shop, soldering iron and the will to order electronic parts, I instead started working on designs on paper. I made this virtual machine to confirm that I understood how computer and cpu worked, and to actually test my instruction set. Maybe some other people will find this usefull to visualize what is actually happening inside every cpu.
 
-This is the very first version, a proof of concept. I plan to make more version to iterate over the concept and make it actually useful, 16 bytes is currently pretty useless :)
+This is a proof of concept, I plan to to iterate over the design and make it actually useful, 16 bytes is currently pretty useless :)
 
 ## Architecture
 
@@ -21,18 +21,18 @@ This is the very first version, a proof of concept. I plan to make more version 
 ## Instruction set
 
 - NOP : ```0000 ----``` no op, used to store value in the lower 4 bits
-- LDA : ```0001 ADRS``` load value at memory adress ADDR into accumulator
-- ADD : ```0010 ADRS``` add value at memory adress ADDR to value in accumulator and store the result in accumulator
-- SUB : ```0011 ADRS``` subst value at memory adress ADDR to value in accumulator and store the result in accumulator
-- STO : ```0100 ADRS``` store accumulator value into memory adress ADDR
+- LDA : ```0001 ADRS``` load value at memory adress ADRS into accumulator
+- ADD : ```0010 ADRS``` add value at memory adress ADRS to value in accumulator and store result in accumulator
+- SUB : ```0011 ADRS``` subst value at memory adress ADRS to value in accumulator and store the result in accumulator
+- STO : ```0100 ADRS``` store accumulator value into memory adress ADRS
 - OUT : ```0101 ----``` output value in accumulator to the host's terminal
-- JMP : ```0110 ADRS``` change the program counter to the value stored in memory adress ADDR
+- JMP : ```0110 ADRS``` change the program counter to the value stored in memory adress ADRS
 - HLT : ```0111 ----``` halt the computer
-- CMP : ```1000 ADRS``` compare value in memory adress ADRS and value stored in accumulator, program counter is incremented by 1 if they are the same bit for bit (the next instruction is then skip entirely, since the program counter is incremented after the execution of every instruction)
+- CMP : ```1000 ADRS``` compare value in memory adress ADRS and value stored in accumulator. The program counter is incremented by 1 if they are the same bit for bit (the next instruction is then skip entirely, since the program counter is incremented after the execution of every instruction)
 
 ## How to
 
-- Pass a path to a file containing a "vbinary" as the first argument of the program. It must contain at most 128 '0' and '1' **characters** that will be loaded into the virtual computer's memory. As example vbin file is provided il this repo. If no file is provided, the machine will load the default test program.
+- Pass a path to a file containing a "vbinary" as the first argument of the program. It must contain at most 128 '0' and '1' **characters** that will be loaded into the virtual computer's memory. An example vbin file is provided in this repo. If no file is provided, the machine will load the default test program. The the file provided is incorrect, as error message will be shown and the program will stop
 - ```ESCAPE``` at any time during the execution will stop the virtual machine at the current step.
 - When stopped, any key will quit the program.
 
