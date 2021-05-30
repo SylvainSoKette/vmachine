@@ -66,9 +66,9 @@ void load_program_to_memory(const char* program_filepath)
 	if (!file)
 	{
 		if (program_filepath)
-			printf("Could not read file: %s\n", program_filepath);
+			printf("[ERROR] Could not read file: %s\n", program_filepath);
 		else
-			printf("No filepath to a binary given\n");
+			printf("[ERROR] No filepath to a binary given\n");
 		printf("Loading default test program...\n");
 
 		MEM[0]  = 0b00001111; // NOP 15
@@ -121,7 +121,7 @@ void load_program_to_memory(const char* program_filepath)
 
 			if (byte == MEMORY_SIZE && bit > 0)
 			{
-				printf("Memory overflow.\n");
+				printf("[ERROR] Out of memory\n");
 				exit(EXIT_FAILURE);
 			}
 		}	
@@ -143,12 +143,16 @@ void fetch_decode_execute()
 	IR = MEM[PC];
 
 #if DEBUG
-    if (DEBUG) printf("Decode at %X\n", PC);
+	// No "really" a decode phase, since the switch statment next
+	// Is also part of the decoding porcess.
+    printf("Decode at %X\n", PC);
 #endif
 	char op_code = (0b11110000 & IR) >> 4;
     char mod = 0b00001111 & IR;
 
 #if DEBUG
+	// No really "execute" phase, only the part actually inside the "case"
+	// statment should count toward being the execution phase.
     printf("\top_code : 0x%X\n\tmodifier : 0x%X\n", op_code, mod);
 	printf("Execute at %X\n", PC);
 #endif
