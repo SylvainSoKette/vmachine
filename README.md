@@ -7,7 +7,7 @@ A virtual machine designed to learn about cpu architecture.
 I made this virtual machine to confirm that I understood how computer and cpu worked.
 As a side effect, I guess it can also be used to learn about cpu architectures, machine code, assembly and compilers !
 
-This is the very first version, a proof of concept. I plan to 
+This is the very first version, a proof of concept. I plan to make more version to iterate over the concept and make it actually useful, 16 bytes is currently pretty useless :)
 
 ## Architecture
 
@@ -30,19 +30,19 @@ This is the very first version, a proof of concept. I plan to
 
 ## How to
 
-- ```ESCAPE``` stop the machine at the current step.
-- When stop, any key will quit the program.
+- ```ESCAPE``` at any time during the execution will stop the virtual machine at the current step.
+- When stopped, any key will quit the program.
 
 ## Requirements
 
 - SDL2
-- make
+- (optional) make
 
 ## TODO and Ideas
 
 - [x] add comparator instruction
 - [x] visual representation with SDL
-- [ ] load "binary" from file to program memory
+- [x] load "binary" from file to program memory
 - [ ] better delay management: delay all the time and full-speed when key pressed ? Different speed settings ? Programmable frequency ?
 - [ ] extend to 16 bits instructions : 4 bits op code, 12 bits modifier (4096 bytes of addressable memory) ?
 - [ ] python assembler to translate assembly to "machine code" that can be read by the virtual machine.
