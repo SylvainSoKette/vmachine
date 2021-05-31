@@ -7,9 +7,9 @@ A virtual machine designed to learn about cpu architecture.
 ## Why ?
 
 I'm a huge fan of [Ben Eater](https://www.youtube.com/c/BenEater/) and binged watched all of his videos on building a computer from scratch.
-Since I lack a shop, soldering iron and the will to order electronic parts, I instead started working on designs on paper. I made this virtual machine to confirm that I understood how computer and cpu worked, and to actually test my instruction set. Maybe some other people will find this usefull to visualize what is actually happening inside every cpu.
+Since I lack a shop, soldering iron and the will to order electronic parts, I instead started working on my own designs on paper. I made this virtual machine to confirm that I understood how computer and cpu worked, and to actually test my instruction set. Maybe some other people will find this usefull to visualize and conceptualize what is actually happening inside a cpu.
 
-This is a proof of concept, I plan to to iterate over the design and make it actually useful, 16 bytes is currently pretty useless :)
+This is a proof of concept, I plan to to iterate over the design and make it actually useful, 16 bytes of memory is currently pretty useless :)
 
 ## Architecture
 
@@ -32,7 +32,7 @@ This is a proof of concept, I plan to to iterate over the design and make it act
 
 ## How to
 
-- Pass a path to a file containing a "vbinary" as the first argument of the program. It must contain at most 128 '0' and '1' **characters** that will be loaded into the virtual computer's memory. An example vbin file is provided in this repo. If no file is provided, the machine will load the default test program. If the file provided is incorrect, as error message will be shown and the program will stop.
+- Pass a path to a file containing a "vbinary" as the first argument of the program. It must contain at most 128 '0' and '1' **characters** that will be loaded into the virtual computer's memory (it's easier to edit a file on a text editor this way !). An example vbin file is provided in this repo. If no file is provided, the machine will load the default test program. If the file provided is incorrect, as error message will be shown and the program will stop.
 - ```ESCAPE``` at any time during the execution will stop the virtual machine at the current step.
 - When stopped, any key will quit the program.
 
@@ -53,4 +53,3 @@ This is a proof of concept, I plan to to iterate over the design and make it act
 - [ ] framebuffer and display ?
 - [ ] IOs ? At least keyboard ?
 - [ ] Stack architecture ?
-
