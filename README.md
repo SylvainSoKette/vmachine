@@ -21,14 +21,14 @@ This is a proof of concept, I plan to to iterate over the design and make it act
 ## Instruction set
 
 - NOP : ```0000 ----``` no op, used to store value in the lower 4 bits
-- LDA : ```0001 ADRS``` load value at memory adress ADRS into accumulator
-- ADD : ```0010 ADRS``` add value at memory adress ADRS to value in accumulator and store result in accumulator
-- SUB : ```0011 ADRS``` subst value at memory adress ADRS to value in accumulator and store the result in accumulator
-- STO : ```0100 ADRS``` store accumulator value into memory adress ADRS
+- LDA : ```0001 ADDR``` load value at memory address ADDR into accumulator
+- ADD : ```0010 ADDR``` add value at memory address ADDR to value in accumulator and store result in accumulator
+- SUB : ```0011 ADDR``` subst value at memory address ADDR to value in accumulator and store the result in accumulator
+- STO : ```0100 ADDR``` store accumulator value into memory address ADDR
 - OUT : ```0101 ----``` output value in accumulator to the host's terminal
-- JMP : ```0110 ADRS``` change the program counter to the value stored in memory adress ADRS
+- JMP : ```0110 ADDR``` change the program counter to the value stored in memory address ADDR
 - HLT : ```0111 ----``` halt the computer
-- CMP : ```1000 ADRS``` compare value in memory adress ADRS and value stored in accumulator. The program counter is incremented by 1 if they are the same bit for bit (the next instruction is then skip entirely, since the program counter is incremented after the execution of every instruction)
+- CMP : ```1000 ADDR``` compare value in memory address ADDR and value stored in accumulator. The program counter is incremented by 1 if they are the same bit for bit (the next instruction is then skip entirely, since the program counter is incremented after the execution of every instruction)
 
 ## How to
 
