@@ -23,16 +23,19 @@
 // VIRTUAL COMPUTER CODE //////////////////////////////////
 ///////////////////////////////////////////////////////////
 
-// "Physical" parts
-static char unsigned MEM[MEMORY_SIZE];
-static char unsigned ACC; // use low 4 bits only
-static char unsigned PC; // should only go to f in hex
-static char unsigned IR; // high 4 bits is instruction, low 4 bits is value
+typedef unsigned char u8;
 
-// Logical parts
-static int EXIT = 0;
+typedef struct {
+	u8 MEM[MEMORY_SIZE]; // program memory
+	u8 ACC;              // accumulator -> low 4 bits
+	u8 PC;               // program counter -> 0 to f
+	u8 IR;               // instruction register -> high 4 bits is instruction, low 4 bits is value
+	int running;
+} VMachine;
 
-void init_computer()
+static VMachine vm;
+
+void reset_computer()
 {
 #if DEBUG
 	printf("Initializing memory and registers.\n");
@@ -40,21 +43,22 @@ void init_computer()
 	// MEMORY
 	for (int i = 0; i < MEMORY_SIZE; i++)
 	{
-		MEM[i] = 0x0;
+		vm.MEM[i] = 0x0;
 #if DEBUG
 		printf("\t@%02d -> %02x\n", i, MEM[i]);
 #endif
 	}
 	// REGISTER
-	ACC = 0x0;
+	vm.ACC = 0x0;
 	// PROGRAM COUNTER
-	PC = 0x0;
+	vm.PC = 0x0;
 	// INSTRUCTION REGISTER
-	IR = 0x0;
+	vm.IR = 0x0;
+	vm.running = 0x1;
 #if DEBUG
-	printf("\t%p\n", &ACC);
-	printf("\t%p\n", &IR);
-	printf("\t%p\n", &PC);
+	printf("\t%p\n", &vm.ACC);
+	printf("\t%p\n", &vm.IR);
+	printf("\t%p\n", &vm.PC);
 	printf("Memory initialized.\n");
 #endif
 }
@@ -70,22 +74,22 @@ void load_program_to_memory(const char* program_filepath)
 			printf("[ERROR] No filepath to a binary given\n");
 		printf("Loading default test program...\n");
 
-		MEM[0]  = 0b00001111; // NOP 15
-		MEM[1]  = 0b00000001; // NOP 1
-		MEM[2]  = 0b00000000; // NOP 0
-		MEM[3]  = 0b01010000; // OUT
-		MEM[4]  = 0b01000010; // STO 2
-		MEM[5]  = 0b00100001; // ADD 1
-		MEM[6]  = 0b10000000; // CMP 0
-		MEM[7]  = 0b01100011; // JMP 3
-		MEM[8]  = 0b01000010; // STO 2
-		MEM[9]  = 0b01110000; // HLT
-		MEM[10] = 0b00000000;
-		MEM[11] = 0b11111111; // -
-		MEM[12] = 0b00000000; //
-		MEM[13] = 0b10011010; // L
-		MEM[14] = 0b10011010; // O
-		MEM[15] = 0b11011011; // L
+		vm.MEM[0]  = 0b00001111; // NOP 15
+		vm.MEM[1]  = 0b00000001; // NOP 1
+		vm.MEM[2]  = 0b00000000; // NOP 0
+		vm.MEM[3]  = 0b01010000; // OUT
+		vm.MEM[4]  = 0b01000010; // STO 2
+		vm.MEM[5]  = 0b00100001; // ADD 1
+		vm.MEM[6]  = 0b10000000; // CMP 0
+		vm.MEM[7]  = 0b01100011; // JMP 3
+		vm.MEM[8]  = 0b01000010; // STO 2
+		vm.MEM[9]  = 0b01110000; // HLT
+		vm.MEM[10] = 0b00000000;
+		vm.MEM[11] = 0b11111111; // -
+		vm.MEM[12] = 0b00000000; //
+		vm.MEM[13] = 0b10011010; // L
+		vm.MEM[14] = 0b10011010; // O
+		vm.MEM[15] = 0b11011011; // L
 	} else {
 		char c;
 		int byte = 0;
@@ -99,7 +103,7 @@ void load_program_to_memory(const char* program_filepath)
 			// reading bits in file from left to right
 			int bitmask = 0b10000000 >> bit;
 			if (c == '1') {
-				MEM[byte] = MEM[byte] | bitmask;
+				vm.MEM[byte] = vm.MEM[byte] | bitmask;
 				bit++;
 			}
 			else if (c == '0') {
@@ -121,7 +125,7 @@ void load_program_to_memory(const char* program_filepath)
 	printf("Memory content:\n");
 	for (int i = 0; i < MEMORY_SIZE; i++)
 	{
-		printf("\t@%02d -> %02x\n", i, MEM[i]);
+		printf("\t@%02d -> %02x\n", i, vm.MEM[i]);
 	}
 #endif
 }
@@ -131,15 +135,15 @@ void fetch_decode_execute()
 #if DEBUG
 	printf("Fetch at %X\n", PC);
 #endif
-	IR = MEM[PC];
+	vm.IR = vm.MEM[vm.PC];
 
 #if DEBUG
 	// No "really" a decode phase, since the switch statment next
 	// Is also part of the decoding porcess.
 	printf("Decode at %X\n", PC);
 #endif
-	char op_code = (0b11110000 & IR) >> 4;
-	char mod = 0b00001111 & IR;
+	char op_code = (0b11110000 & vm.IR) >> 4;
+	char mod = 0b00001111 & vm.IR;
 
 #if DEBUG
 	// No really "execute" phase, only the part actually inside the "case"
@@ -149,40 +153,40 @@ void fetch_decode_execute()
 #endif
 	switch (op_code) {
 	case 0: // 0000 NOP
-		++PC;
+		++vm.PC;
 		break;
 	case 1: // 0001 LDA
-		ACC = MEM[mod];
-		++PC;
+		vm.ACC = vm.MEM[mod];
+		++vm.PC;
 		break;
 	case 2: // 0010 ADD
-		ACC = 0b1111 & (ACC + MEM[mod]);
-		++PC;
+		vm.ACC = 0b1111 & (vm.ACC + vm.MEM[mod]);
+		++vm.PC;
 		break;
 	case 3: // 0011 SUB
-		ACC = 0b1111 & (ACC - MEM[mod]);
-		++PC;
+		vm.ACC = 0b1111 & (vm.ACC - vm.MEM[mod]);
+		++vm.PC;
 		break;
 	case 4: // 0100 STO
-		MEM[mod] = ACC;
-		++PC;
+		vm.MEM[mod] = vm.ACC;
+		++vm.PC;
 		break;
 	case 5: // 0101 OUT
-		printf("[OUT] 0x%X\n", ACC);
-		++PC;
+		printf("[OUT] 0x%X\n", vm.ACC);
+		++vm.PC;
 		break;
 	case 6: // 0110 JMP
-		PC = mod;
+		vm.PC = mod;
 		break;
 	case 7: // 0111 HLT
-		EXIT = 1;
+		vm.running = 0;
 		break;
 	case 8: // 1000 CMP
-		PC += (ACC == MEM[mod]);
-		++PC;
+		vm.PC += (vm.ACC == vm.MEM[mod]);
+		++vm.PC;
 		break;
 	default: // UNKNOWN OP, please advance program counter.
-		++PC;
+		++vm.PC;
 		break;
 	}
 #if DEBUG
@@ -192,7 +196,7 @@ void fetch_decode_execute()
 
 void boot_computer(const char* program_filepath)
 {
-	init_computer();
+	reset_computer();
 	load_program_to_memory(program_filepath);
 }
 
@@ -215,7 +219,7 @@ void draw_program_counter(SDL_Renderer* r, int x, int y, int ppb)
 	bool bit;
 
 	for (int n = 0; n < 4; n++) {
-		bit = get_bit_at(PC, n);
+		bit = get_bit_at(vm.PC, n);
 		if (bit) color = COLOR_WHITE;
 		else     color = COLOR_BLACK;
 		draw_rect(
@@ -235,7 +239,7 @@ void draw_accumulator(SDL_Renderer* r, int x, int y, int ppb)
 	bool bit;
 
 	for (int n = 0; n < 4; n++) {
-		bit = get_bit_at(ACC, n);
+		bit = get_bit_at(vm.ACC, n);
 		if (bit) color = COLOR_WHITE;
 		else     color = COLOR_BLACK;
 		draw_rect(
@@ -255,9 +259,9 @@ void draw_instruction_register(SDL_Renderer* r, int x, int y, int ppb)
 	bool bit;
 
 	for (int n = 0; n < 8; n++) {
-		bit = get_bit_at(IR, n);
+		bit = get_bit_at(vm.IR, n);
 		if (bit) color = COLOR_WHITE;
-		else	 color = COLOR_BLACK;
+		else     color = COLOR_BLACK;
 		draw_rect(
 			r,
 			x + (8 * ppb) - ppb - (n * ppb),
@@ -278,8 +282,8 @@ void draw_memory(SDL_Renderer* r, int x, int y, int ppb)
 
 	for (int mem = 0; mem < MEMORY_SIZE; mem++) {
 		for (int n = 0; n < 8; n++) {
-			active = (mem == PC);
-			bit = get_bit_at(MEM[mem], n);
+			active = (mem == vm.PC);
+			bit = get_bit_at(vm.MEM[mem], n);
 			if      ( bit &&  active) color = COLOR_WHITE_HIGHLIGHT;
 			else if ( bit && !active) color = COLOR_WHITE;
 			else if (!bit &&  active) color = COLOR_BLACK_HIGHLIGHT;
@@ -345,7 +349,7 @@ int main(int argc, char** argv)
 	boot_computer(argv[1]); 
 
 	newTime = SDL_GetTicks();
-	while (!EXIT) {
+	while (vm.running) {
 		oldTime = newTime;
 		newTime = SDL_GetTicks();
 		frameTime = newTime - oldTime;
@@ -358,7 +362,7 @@ int main(int argc, char** argv)
 
 		while (SDL_PollEvent(&event)) {
 			if (event.type == SDL_KEYDOWN && event.key.keysym.scancode == SDL_SCANCODE_ESCAPE) {
-				EXIT = true;
+				vm.running = false;
 			}
 		}
 
