@@ -39,7 +39,6 @@ This is a proof of concept, I plan to to iterate over the design and make it act
 ## Requirements
 
 - SDL2
-- (optional) make
 
 ## TODO and Ideas
 
