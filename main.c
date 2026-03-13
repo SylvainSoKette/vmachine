@@ -27,8 +27,8 @@ typedef unsigned char u8;
 
 typedef struct {
 	u8 MEM[MEMORY_SIZE]; // program memory
-	u8 ACC;              // accumulator -> low 4 bits
-	u8 PC;               // program counter -> 0 to f
+	u8 ACC;              // accumulator -> low 4 bits, 0xf but can technically overflow to 0x1e (0xf + 0xf)
+	u8 PC;               // program counter -> 0x0 to 0xf / 0b0 to 0b1111
 	u8 IR;               // instruction register -> high 4 bits is instruction, low 4 bits is value
 	int running;
 } VMachine;
@@ -41,8 +41,7 @@ void reset_computer()
 	printf("Initializing memory and registers.\n");
 #endif
 	// MEMORY
-	for (int i = 0; i < MEMORY_SIZE; i++)
-	{
+	for (int i = 0; i < MEMORY_SIZE; i++) {
 		vm.MEM[i] = 0x0;
 #if DEBUG
 		printf("\t@%02d -> %02x\n", i, MEM[i]);
@@ -313,7 +312,7 @@ void draw_everything(SDL_Renderer* r)
 	SDL_RenderPresent(r);
 }
 
-void wait_for_input_loop()
+bool wait_for_input_loop()
 {
 	SDL_Event event;
 
@@ -323,7 +322,7 @@ void wait_for_input_loop()
 	while (true) {
 		SDL_Delay(1);
 		while (SDL_PollEvent(&event)) {
-			if (event.type == SDL_KEYDOWN) return;
+			if (event.type == SDL_KEYDOWN) return event.key.keysym.sym == SDLK_r;
 		}
 	}
 }
@@ -346,7 +345,8 @@ int main(int argc, char** argv)
 
 	init_sdl_window_renderer(&window, &renderer);
 
-	boot_computer(argv[1]); 
+reboot:
+	boot_computer(argv[1]);
 
 	newTime = SDL_GetTicks();
 	while (vm.running) {
@@ -374,7 +374,9 @@ int main(int argc, char** argv)
 		draw_everything(renderer);
 	}
 
-	wait_for_input_loop(); 
+	if (wait_for_input_loop()) {
+		goto reboot;
+	}
 
 	SDL_DestroyRenderer(renderer);
 	SDL_DestroyWindow(window);
